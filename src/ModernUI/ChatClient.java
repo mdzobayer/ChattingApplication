@@ -1,0 +1,536 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package ModernUI;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JOptionPane;
+
+/**
+ *
+ * @author Zobayer
+ */
+public class ChatClient extends javax.swing.JFrame implements Runnable {
+
+    /**
+     * Creates new form ChatClient
+     */
+    Socket socket;
+    Thread thread;
+    DataInputStream din;
+    DataOutputStream dout;
+    
+    String LoginName;
+    int xMouse, yMouse;
+    public ChatClient() {
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Windows".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        initComponents();
+        setLocationRelativeTo(null);
+    }
+    public ChatClient(String login) throws UnknownHostException, IOException{
+        super(login);
+        LoginName = login;
+//        try {
+//            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+//                if ("Windows".equals(info.getName())) {
+//                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+//                    break;
+//                }
+//            }
+//        } catch (ClassNotFoundException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (InstantiationException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (IllegalAccessException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+//            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+//        }
+        //JOptionPane.showMessageDialog(null, "Here 1");
+        addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e) {
+                try {
+                    dout.writeUTF(LoginName + " " + "LOGOUT" + " " + "GROUP");
+                    System.exit(0);
+                }
+                catch(IOException ex) {
+                    Logger.getLogger(ChatClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+        //JOptionPane.showMessageDialog(null, "Here 2");
+        socket = new Socket ("127.0.0.1", 10007);
+        
+        din = new DataInputStream(socket.getInputStream());
+        dout  = new DataOutputStream(socket.getOutputStream());
+        
+        initComponents();
+        setLocationRelativeTo(null);
+        name.setText(LoginName);
+        name.setVisible(true);
+        
+        thread = new Thread(this);
+        thread.start();
+        
+        dout.writeUTF(LoginName);
+        dout.writeUTF(LoginName + " " + "LOGIN" + " " + "GROUP");
+        //JOptionPane.showMessageDialog(null, "Here");
+        
+        
+        //thread.start();
+        
+        
+    }
+    @Override
+    public void run() {
+        
+        while(true) {
+            //JOptionPane.showMessageDialog(null, "Inside loop");
+            try {
+                ta.append(din.readUTF() + "\n");
+            }
+            catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        ta = new javax.swing.JTextArea();
+        tf = new javax.swing.JTextField();
+        send = new javax.swing.JButton();
+        logout = new javax.swing.JButton();
+        name = new javax.swing.JLabel();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        desti = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAutoRequestFocus(send.isDefaultButton());
+        setUndecorated(true);
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel1MouseDragged(evt);
+            }
+        });
+        jPanel1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel1MousePressed(evt);
+            }
+        });
+        jPanel1.setLayout(null);
+
+        jScrollPane1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+
+        ta.setEditable(false);
+        ta.setColumns(20);
+        ta.setFont(new java.awt.Font("Centaur", 1, 20)); // NOI18N
+        ta.setRows(5);
+        ta.setBorder(null);
+        jScrollPane1.setViewportView(ta);
+        ta.getAccessibleContext().setAccessibleName("");
+
+        jPanel1.add(jScrollPane1);
+        jScrollPane1.setBounds(180, 50, 500, 260);
+
+        tf.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
+        tf.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        tf.setText("Type Message");
+        tf.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        tf.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                tfFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                tfFocusLost(evt);
+            }
+        });
+        tf.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tfKeyPressed(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tfKeyTyped(evt);
+            }
+        });
+        jPanel1.add(tf);
+        tf.setBounds(290, 330, 390, 30);
+
+        send.setBackground(new java.awt.Color(255, 255, 255));
+        send.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        send.setText("Send");
+        send.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                sendMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                sendMouseExited(evt);
+            }
+        });
+        send.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendActionPerformed(evt);
+            }
+        });
+        jPanel1.add(send);
+        send.setBounds(320, 380, 120, 40);
+
+        logout.setBackground(new java.awt.Color(0, 102, 204));
+        logout.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        logout.setForeground(new java.awt.Color(255, 255, 255));
+        logout.setText("Logout");
+        logout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logout.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                logoutMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                logoutMouseExited(evt);
+            }
+        });
+        logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutActionPerformed(evt);
+            }
+        });
+        jPanel1.add(logout);
+        logout.setBounds(530, 380, 120, 40);
+
+        name.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        name.setForeground(new java.awt.Color(255, 255, 255));
+        jPanel1.add(name);
+        name.setBounds(20, 10, 240, 30);
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jPanel4.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                jPanel4MouseDragged(evt);
+            }
+        });
+        jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jPanel4MousePressed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 280, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 50, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel4);
+        jPanel4.setBounds(360, 0, 280, 50);
+
+        jPanel2.setBackground(new java.awt.Color(0, 102, 204));
+        jPanel2.setPreferredSize(new java.awt.Dimension(35, 35));
+        jPanel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jPanel2MouseClicked(evt);
+            }
+        });
+
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("X");
+        jLabel3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jLabel3MouseClicked(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 20, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel2);
+        jPanel2.setBounds(670, 0, 40, 35);
+
+        desti.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
+        desti.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        desti.setText("GROUP");
+        desti.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+        jPanel1.add(desti);
+        desti.setBounds(180, 330, 100, 30);
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ModernUI/message4.png"))); // NOI18N
+        jPanel1.add(jLabel2);
+        jLabel2.setBounds(20, 80, 140, 160);
+
+        jLabel4.setFont(new java.awt.Font("Calibri", 1, 30)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel4.setText("Welcome");
+        jPanel1.add(jLabel4);
+        jLabel4.setBounds(30, 270, 120, 30);
+
+        jLabel1.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ModernUI/largeBackground.png"))); // NOI18N
+        jPanel1.add(jLabel1);
+        jLabel1.setBounds(0, 0, 710, 480);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void logoutMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseEntered
+        // TODO add your handling code here:
+        logout.setBackground(new java.awt.Color(255, 255, 255));
+        logout.setForeground(new java.awt.Color(0, 102, 204));
+    }//GEN-LAST:event_logoutMouseEntered
+
+    private void logoutMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutMouseExited
+        // TODO add your handling code here:
+        logout.setBackground(new java.awt.Color(0, 102, 204));
+        logout.setForeground(new java.awt.Color(255, 255, 255));
+    }//GEN-LAST:event_logoutMouseExited
+
+    private void jPanel4MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MouseDragged
+        // TODO add your handling code here:
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x - xMouse - 360, y - yMouse);
+    }//GEN-LAST:event_jPanel4MouseDragged
+
+    private void jPanel4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel4MousePressed
+        // TODO add your handling code here:
+        xMouse = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_jPanel4MousePressed
+
+    private void jPanel1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MousePressed
+        // TODO add your handling code here:
+        xMouse = evt.getX();
+        yMouse = evt.getY();
+    }//GEN-LAST:event_jPanel1MousePressed
+
+    private void jPanel1MouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseDragged
+        // TODO add your handling code here:
+        int x = evt.getXOnScreen();
+        int y = evt.getYOnScreen();
+        this.setLocation(x - xMouse, y - yMouse);
+    }//GEN-LAST:event_jPanel1MouseDragged
+
+    private void sendMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMouseExited
+        // TODO add your handling code here:
+        send.setBackground(new java.awt.Color(255, 255, 255));
+        send.setForeground(new java.awt.Color(0, 102, 204));
+    }//GEN-LAST:event_sendMouseExited
+
+    private void sendMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sendMouseEntered
+        // TODO add your handling code here:
+        send.setBackground(new java.awt.Color(0, 102, 204));
+        send.setForeground(new java.awt.Color(255, 255, 255));
+    }//GEN-LAST:event_sendMouseEntered
+
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        // TODO add your handling code here:
+        try {
+            if(tf.getText().length() > 0)
+                dout.writeUTF(LoginName + " " + 
+                        "DATA " + desti.getText() + " " + tf.getText().toString());
+            tf. setText("");
+        }
+        catch(IOException e) {
+            // Catch Exceptoin
+        }
+    }//GEN-LAST:event_sendActionPerformed
+
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
+        // TODO add your handling code here:
+        try {
+            dout.writeUTF(LoginName + " " + "LOGOUT" + " " + "GROUP");
+            this.setVisible(false);
+            
+            Login l = new Login();
+            l.setVisible(true);
+            this.dispose();
+        }
+        catch(IOException e1) {
+            // Catch e
+        }
+    }//GEN-LAST:event_logoutActionPerformed
+
+    private void jLabel3MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel3MouseClicked
+        // TODO add your handling code here:
+        try {
+            dout.writeUTF(LoginName + " " + "LOGOUT" + " " + "GROUP");
+            System.exit(0);
+        }
+        catch(IOException e1) {
+            // Catch e
+        }
+        System.exit(0);
+    }//GEN-LAST:event_jLabel3MouseClicked
+
+    private void jPanel2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel2MouseClicked
+        // TODO add your handling code here:
+        try {
+            dout.writeUTF(LoginName + " " + "LOGOUT" + " " + "GROUP");
+            System.exit(0);
+        }
+        catch(IOException e1) {
+            // Catch e
+        }
+        System.exit(0);
+    }//GEN-LAST:event_jPanel2MouseClicked
+
+    private void tfFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfFocusGained
+        // TODO add your handling code here:
+        String s = tf.getText();
+        if (s.equals("Type Message")) {
+            tf.setText("");
+        }
+    }//GEN-LAST:event_tfFocusGained
+
+    private void tfFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tfFocusLost
+        // TODO add your handling code here:
+        String s = tf.getText();
+        if (s.equals("")) {
+            tf.setText("Type Message");
+        }
+    }//GEN-LAST:event_tfFocusLost
+
+    private void tfKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tfKeyTyped
+
+    private void tfKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tfKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            try{
+                if(tf.getText().length() > 0)
+                dout.writeUTF(LoginName + " " + 
+                        "DATA " + desti.getText() + " " + tf.getText().toString());
+            tf. setText("");
+            }
+            catch(UnknownHostException e1) {
+                e1.printStackTrace(); 
+            }
+            catch(IOException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }//GEN-LAST:event_tfKeyPressed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(ChatClient.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new ChatClient().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField desti;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton logout;
+    private javax.swing.JLabel name;
+    private javax.swing.JButton send;
+    private javax.swing.JTextArea ta;
+    private javax.swing.JTextField tf;
+    // End of variables declaration//GEN-END:variables
+}
